@@ -29,19 +29,40 @@ const urlsToCache = [
     // online reference
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",
     "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js",
-    /*
+    "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css",
+    "https://fonts.googleapis.com/icon?family=Material+Icons",
+    "https://fonts.gstatic.com/s/materialicons/v67/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2",
+    "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
     
-    "/css/materialize.min.css",
-    "/js/nav.js",
-    "/js/idb.js",
-    "/js/db.js",
-    "/js/materialize.min.js",
-    "/js/apiFootball.js",
-    "/js/favorite.js",
-    "/js/main.js",
-    "/images/bell.png",
-    "/images/logo-laliga.png",
-    "/manifest.json",
-    "/index.js",
-    */
+   
+    
 ];
+
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+      caches.open(CACHE_NAME).then( (cache) => {
+        return cache.addAll(urlsToCache);
+      })
+    );
+});
+
+
+self.addEventListener("fetch", (event) => {
+    const base_url = "https://api.football-data.org";
+    if (event.request.url.indexOf(base_url) > -1) {
+      event.respondWith(
+        caches.open(CACHE_NAME).then( (cache) => {
+          return fetch(event.request).then( (response) => {
+            cache.put(event.request.url, response.clone());
+            return response;
+          })
+        })
+      );
+    } else {
+      event.respondWith(
+        caches.match(event.request, { ignoreSearch: true }).then((response) => {
+          return response || fetch (event.request);
+        })
+      )
+    }
+});
