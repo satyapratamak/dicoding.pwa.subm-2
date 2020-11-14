@@ -23,12 +23,14 @@ const urlsToCache = [
     "/js/regSW.js",
     // /pages
     "/pages/home.html",
-
-    // online reference
     "/pages/klasemen.html",
     "/pages/favorites.html",
-    "/css/custom.css",
-    /*"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",
+
+    // online reference
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js",
+    /*
+    
     "/css/materialize.min.css",
     "/js/nav.js",
     "/js/idb.js",
@@ -41,5 +43,5 @@ const urlsToCache = [
     "/images/logo-laliga.png",
     "/manifest.json",
     "/index.js",
-    "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"*/
+    */
 ];
