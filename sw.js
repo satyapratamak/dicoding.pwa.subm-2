@@ -21,9 +21,12 @@ const urlsToCache = [
     "/js/api.js",
     "/js/navigation.js",
     "/js/regSW.js",
+    "/js/db.js",
+    "/js/idb.js",
+    "/js/fav.js",
     // /pages
-    "/pages/home.html",
-    "/pages/klasemen.html",
+    "/pages/epl-team.html",
+    "/pages/laliga-team.html",
     "/pages/favorites.html",
 
     // online reference
@@ -32,6 +35,9 @@ const urlsToCache = [
     "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css",
     "https://fonts.googleapis.com/icon?family=Material+Icons",
     "https://fonts.gstatic.com/s/materialicons/v67/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf?v=4.7.0",
     "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
     
    

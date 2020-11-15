@@ -1,3 +1,4 @@
+
 class DB {
 
     constructor(){
@@ -11,7 +12,7 @@ class DB {
         });
     }
 
-    getEPLAll() {
+    getAll() {
         return new Promise((resolve, reject) => {
             this.dbPromised
             .then((db) => {
@@ -25,7 +26,7 @@ class DB {
         });
     }
 
-    removeFavEPLTeam(id) {
+    removeFavTeam(id) {
         this.dbPromised
         .then((db) => {
             const tx = db.transaction("teams", "readwrite");
@@ -37,7 +38,7 @@ class DB {
         });
     }
 
-    saveFavEPLTeam(team) {
+    saveFavTeam(team) {
         this.dbPromised
         .then((db) => {
             const tx = db.transaction("teams", "readwrite");

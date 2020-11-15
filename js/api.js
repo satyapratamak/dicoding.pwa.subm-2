@@ -46,10 +46,10 @@ class Teams extends API{
             .then(this.status)
             .then(this.json)
             .then(data => {
-                this.db.getEPLAll().
+                this.db.getAll().
                 then(savedTeams => {
                     setTimeout(() => {
-                        this.renderHtmlEPLTeams(data.teams, savedTeams);
+                        this.renderHtmlTeamsThumbnail(data.teams, savedTeams);
                     }, 1000);
                 });
             })
@@ -57,28 +57,111 @@ class Teams extends API{
         }
     }
 
+    renderHtmlTeamsThumbnail(teams, savedTeams) {
+        const teamsHtml = document.getElementById("teams");
+        teamsHtml.innerHTML = '';
+        teams.forEach(data => {
+           
+            let faHeart = 'fa-heart-o';
+            const urlThumbnail = "./assets/img/logo.png";
+            let isSaved = false;
+            let active = '';
+            for(let i = 0; i < savedTeams.length; i++) {
+                if(data.id === savedTeams[i].id) {
+                    isSaved = true;
+                    break;
+                }
+            }        
+            if(isSaved) {
+                active = 'active active-2 active-3';
+                faHeart = 'fa-heart';
+            }
+            teamsHtml.innerHTML += `
+                <div class="col s12 m6">
+                    <div class="card horizontal">
+                        <div class="card-image">
+                            <img src="${urlThumbnail}" alt="${data.name}" class="responsive-img" style="margin: 10px;">
+                        </div>
+                        <div class="card-stacked">
+                            <div class="col s5" style="margin-top: 5px;">
+                                <div class="click ${active}" id="click_favorite_${data.id}">
+                                    <span class="fa ${faHeart}" id="add_start_${data.id}"></span>
+                                    <div class="ring"></div>
+                                    <div class="ring2"></div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-title" style="color: black;"><strong>${data.name}</strong></span>
+                                <p>
+                                    Address: ${data.address}
+                                </p>
+                            </div>
+                            <div class="card-action">
+                                <a href="${data.website}" target="__blank">Website</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            this.fav.favTeam(data.id, data);
+        });
+    }
+
+    checkCacheLaLigaTeams() {
+        if ("caches" in window) {
+            caches.match(`${this.baseUrl}/competitions/2021/teams`)
+            .then(this.status)
+            .then(this.json)
+            .then(data => {
+                this.db.getAll().
+                then(savedTeams => {
+                    setTimeout(() => {
+                        this.renderHtmlTeamsThumbnail(data.teams, savedTeams);
+                    }, 1000);
+                });
+            })
+            .catch(this.error);
+        }
+    }
+
+    
     getEPLTeams() {
         this.checkCacheEPLTeams();
         fetch(`${this.baseUrl}/competitions/2021/teams`, this.options)
         .then(this.status)
         .then(this.json)
         .then(data => {
-            this.db.getEPLAll().
+            this.db.getAll().
             then(savedTeams => {
                 setTimeout(() => {
-                    this.renderHtmlEPLTeams(data.teams, savedTeams);
+                    this.renderHtmlTeams(data.teams, savedTeams);
                 }, 1000);
             });
         })
         .catch(this.error);
     }
 
-    renderHtmlEPLTeams(teams, savedTeams) {
+    getLaLigaTeams() {
+        this.checkCacheLaLigaTeams();
+        fetch(`${this.baseUrl}/competitions/2014/teams`, this.options)
+        .then(this.status)
+        .then(this.json)
+        .then(data => {
+            this.db.getAll().
+            then(savedTeams => {
+                setTimeout(() => {
+                    this.renderHtmlTeams(data.teams, savedTeams);
+                }, 1000);
+            });
+        })
+        .catch(this.error);
+    }
+
+    renderHtmlTeams(teams, savedTeams) {
         const teamsHtml = document.getElementById("teams");
         teamsHtml.innerHTML = '';
         teams.forEach(data => {
-            //const urlImage = data.crestUrl.replace(/^http:\/\//i, 'https://');
-            //const urlImage = data.crestUrl;
+           
             let faHeart = 'fa-heart-o';
             let isSaved = false;
             let active = '';
@@ -119,13 +202,117 @@ class Teams extends API{
                     </div>
                 </div>
             `;
-            this.fav.favEPLTeam(data.id, data);
+            this.fav.favTeam(data.id, data);
         });
-    }    
+    }
+    
+    getSavedTeams() {
+        this.checkCacheSavedTeams();
+        this.db.getAll()
+        .then(teams => {
+            setTimeout(() => {
+                this.renderFavTeams(teams);
+            }, 1000);
+        });
+    }
+
+    checkCacheSavedTeams() {
+        if ("caches" in window) {
+            this.db.getAll()
+            .then(teams => {
+                setTimeout(() => {
+                    this.renderFavTeamsThumbnail(teams);
+                }, 1000);
+            });
+        }
+    }
+
+
+    renderFavTeams(teams) {
+        const teamsHtml = document.getElementById("favorite_teams");
+        teamsHtml.innerHTML = '';
+        if(teams.length != 0) {
+            teams.forEach(data => {
+                //const urlImage = data.crestUrl.replace(/^http:\/\//i, 'https://');
+                teamsHtml.innerHTML += `
+                    <div class="col s12 m6">
+                        <div class="card horizontal">
+                            <div class="card-image">
+                                <img src="${data.crestUrl}" alt="${data.name}" class="responsive-img" style="margin: 10px;">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="col s5" style="margin-top: 5px;">
+                                    <div class="click active active-2 active-3" id="click_favorite_${data.id}">
+                                        <span class="fa fa-heart" id="add_start_${data.id}"></span>
+                                        <div class="ring"></div>
+                                        <div class="ring2"></div>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <span class="card-title" style="color: black;"><strong>${data.name}</strong></span>
+                                    <p>
+                                        Address: ${data.address}
+                                    </p>
+                                </div>
+                                <div class="card-action">
+                                    <a href="${data.website}" target="__blank">Website</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                this.fav.favTeam(data.id, data);
+            });
+        } else {
+            teamsHtml.innerHTML = `
+                <h4>The favorite team is empty</h4>
+            `;
+        }
+    }
+
+    renderFavTeamsThumbnail(teams) {
+        const teamsHtml = document.getElementById("favorite_teams");
+        teamsHtml.innerHTML = '';
+        if(teams.length != 0) {
+            teams.forEach(data => {
+                //const urlImage = data.crestUrl.replace(/^http:\/\//i, 'https://');
+                const urlThumbnail = "./assets/img/logo.png";
+                teamsHtml.innerHTML += `
+                    <div class="col s12 m6">
+                        <div class="card horizontal">
+                            <div class="card-image">
+                                <img src="${urlThumbnail}" alt="${data.name}" class="responsive-img" style="margin: 10px;">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="col s5" style="margin-top: 5px;">
+                                    <div class="click active active-2 active-3" id="click_favorite_${data.id}">
+                                        <span class="fa fa-heart" id="add_start_${data.id}"></span>
+                                        <div class="ring"></div>
+                                        <div class="ring2"></div>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <span class="card-title" style="color: black;"><strong>${data.name}</strong></span>
+                                    <p>
+                                        Address: ${data.address}
+                                    </p>
+                                </div>
+                                <div class="card-action">
+                                    <a href="${data.website}" target="__blank">Website</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                this.fav.favTeam(data.id, data);
+            });
+        } else {
+            teamsHtml.innerHTML = `
+                <h4>The favorite team is empty</h4>
+            `;
+        }
+    }
 }
 
-class Standings extends API{
 
-}
-
-export {Teams, Standings};
+export {Teams};

@@ -6,13 +6,13 @@ class Fav {
         this.db = new DB();
     }
 
-    favEPLTeam(id, data){
+    favTeam(id, data){
 
         $(document).ready(() => {
             $(`#click_favorite_${id}`).click(() => {
                 if ($(`#add_start_${id}`).hasClass("fa-heart")) {
                         const page = window.location.hash.substr(1);
-                        this.db.removeFavEPLTeam(id);
+                        this.db.removeFavTeam(id);
                         $(`#click_favorite_${id}`).removeClass('active')
                     setTimeout(() =>  {
                         $(`#click_favorite_${id}`).removeClass('active-2')
@@ -26,7 +26,7 @@ class Fav {
                         }
                     }, 15)
                 } else {
-                    this.db.saveFavEPLTeam(data);
+                    this.db.saveFavTeam(data);
                     $(`#click_favorite_${id}`).addClass('active')
                     $(`#click_favorite_${id}`).addClass('active-2')
                     setTimeout(() =>  {

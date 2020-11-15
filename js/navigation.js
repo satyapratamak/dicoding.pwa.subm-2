@@ -1,4 +1,4 @@
-import {Teams, Standings} from "./api.js";
+import {Teams} from "./api.js";
 
 class Navigation {
 
@@ -10,7 +10,7 @@ class Navigation {
       const elems = document.querySelectorAll(".sidenav");
       M.Sidenav.init(elems);
       this.loadNav();
-      if(this.page == "") this.page = "home";
+      if(this.page == "") this.page = "epl-team";
       this.loadPage(this.page);
     }
   
@@ -26,8 +26,7 @@ class Navigation {
   
                 document.querySelectorAll(".sidenav a, .topnav a").forEach(elm => {
                     elm.addEventListener("click", (event) => {
-                        //const teams = new Teams();
-                        //const standings = new Standings();
+                        
                         var sidenav = document.querySelector(".sidenav");
                         M.Sidenav.getInstance(sidenav).close();
                         this.page = event.target.getAttribute("href").substr(1);
@@ -55,12 +54,12 @@ class Navigation {
             if(this.readyState == 4) {
                 const content = document.querySelector("#body-content");
                 if(this.status == 200) {
-                    if (page === 'home'){
+                    if (page === 'epl-team'){
                         teams.getEPLTeams();
-                    }else if(page === 'klasemen') {
-                      //standings.getStandings();
+                    }else if(page === 'laliga-team') {
+                        teams.getLaLigaTeams();
                     } else if(page === 'favorites') {
-                        //teams.getSavedTeams();
+                        teams.getSavedTeams();
                     }
                     content.innerHTML = xhttp.responseText;
                 } else if (this.status == 404) {
