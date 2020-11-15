@@ -1,3 +1,5 @@
+import {Teams, Standings} from "./api.js";
+
 class Navigation {
 
     constructor() {
@@ -28,28 +30,33 @@ class Navigation {
                         //const standings = new Standings();
                         var sidenav = document.querySelector(".sidenav");
                         M.Sidenav.getInstance(sidenav).close();
-                        
-                        this.loadPage(this.page);
+                        this.page = event.target.getAttribute("href").substr(1);
+
+                        helperLoadPage(this.page);
                     });
                 });
             }
         };
         xhttp.open("GET", "nav.html", true);
         xhttp.send();
+
+        const helperLoadPage = (page) => {
+            this.loadPage(page);
+        };
   
         
     }
   
     loadPage(page) {
         const xhttp = new XMLHttpRequest();
-        //const teams = new Teams();
+        const teams = new Teams();
         //const standings = new Standings();
         xhttp.onreadystatechange = function() {
             if(this.readyState == 4) {
                 const content = document.querySelector("#body-content");
                 if(this.status == 200) {
                     if (page === 'home'){
-                        //teams.getTeams();
+                        teams.getEPLTeams();
                     }else if(page === 'klasemen') {
                       //standings.getStandings();
                     } else if(page === 'favorites') {
