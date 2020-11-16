@@ -49,7 +49,7 @@ class Teams extends API{
                 this.db.getAll().
                 then(savedTeams => {
                     setTimeout(() => {
-                        this.renderHtmlTeamsThumbnail(data.teams, savedTeams);
+                        this.renderHtmlTeams(data.teams, savedTeams);
                     }, 1000);
                 });
             })
@@ -57,55 +57,7 @@ class Teams extends API{
         }
     }
 
-    renderHtmlTeamsThumbnail(teams, savedTeams) {
-        const teamsHtml = document.getElementById("teams");
-        teamsHtml.innerHTML = '';
-        teams.forEach(data => {
-           
-            let faHeart = 'fa-heart-o';
-            const urlThumbnail = "./assets/img/logo.png";
-            let isSaved = false;
-            let active = '';
-            for(let i = 0; i < savedTeams.length; i++) {
-                if(data.id === savedTeams[i].id) {
-                    isSaved = true;
-                    break;
-                }
-            }        
-            if(isSaved) {
-                active = 'active active-2 active-3';
-                faHeart = 'fa-heart';
-            }
-            teamsHtml.innerHTML += `
-                <div class="col s12 m6">
-                    <div class="card horizontal">
-                        <div class="card-image">
-                            <img src="${urlThumbnail}" alt="${data.name}" class="responsive-img" style="margin: 10px;">
-                        </div>
-                        <div class="card-stacked">
-                            <div class="col s5" style="margin-top: 5px;">
-                                <div class="click ${active}" id="click_favorite_${data.id}">
-                                    <span class="fa ${faHeart}" id="add_start_${data.id}"></span>
-                                    <div class="ring"></div>
-                                    <div class="ring2"></div>
-                                </div>
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title" style="color: black;"><strong>${data.name}</strong></span>
-                                <p>
-                                    Address: ${data.address}
-                                </p>
-                            </div>
-                            <div class="card-action">
-                                <a href="${data.website}" target="__blank">Website</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            this.fav.favTeam(data.id, data);
-        });
-    }
+    
 
     checkCacheLaLigaTeams() {
         if ("caches" in window) {
@@ -116,7 +68,7 @@ class Teams extends API{
                 this.db.getAll().
                 then(savedTeams => {
                     setTimeout(() => {
-                        this.renderHtmlTeamsThumbnail(data.teams, savedTeams);
+                        this.renderHtmlTeams(data.teams, savedTeams);
                     }, 1000);
                 });
             })
@@ -204,10 +156,17 @@ class Teams extends API{
             `;
             this.fav.favTeam(data.id, data);
         });
+
+        const images = document.querySelectorAll('img');
+        images.forEach((img) => {
+            img.addEventListener('error', () => {
+                img.src = "./assets/img/logo.png"
+            })
+        });
     }
     
     getSavedTeams() {
-        this.checkCacheSavedTeams();
+        
         this.db.getAll()
         .then(teams => {
             setTimeout(() => {
@@ -216,24 +175,14 @@ class Teams extends API{
         });
     }
 
-    checkCacheSavedTeams() {
-        if ("caches" in window) {
-            this.db.getAll()
-            .then(teams => {
-                setTimeout(() => {
-                    this.renderFavTeamsThumbnail(teams);
-                }, 1000);
-            });
-        }
-    }
-
+    
 
     renderFavTeams(teams) {
         const teamsHtml = document.getElementById("favorite_teams");
         teamsHtml.innerHTML = '';
         if(teams.length != 0) {
             teams.forEach(data => {
-                //const urlImage = data.crestUrl.replace(/^http:\/\//i, 'https://');
+                
                 teamsHtml.innerHTML += `
                     <div class="col s12 m6">
                         <div class="card horizontal">
@@ -268,50 +217,16 @@ class Teams extends API{
                 <h4>The favorite team is empty</h4>
             `;
         }
+
+        const images = document.querySelectorAll('img');
+        images.forEach((img) => {
+            img.addEventListener('error', () => {
+                img.src = "./assets/img/logo.png"
+            })
+        });
     }
 
-    renderFavTeamsThumbnail(teams) {
-        const teamsHtml = document.getElementById("favorite_teams");
-        teamsHtml.innerHTML = '';
-        if(teams.length != 0) {
-            teams.forEach(data => {
-                //const urlImage = data.crestUrl.replace(/^http:\/\//i, 'https://');
-                const urlThumbnail = "./assets/img/logo.png";
-                teamsHtml.innerHTML += `
-                    <div class="col s12 m6">
-                        <div class="card horizontal">
-                            <div class="card-image">
-                                <img src="${urlThumbnail}" alt="${data.name}" class="responsive-img" style="margin: 10px;">
-                            </div>
-                            <div class="card-stacked">
-                                <div class="col s5" style="margin-top: 5px;">
-                                    <div class="click active active-2 active-3" id="click_favorite_${data.id}">
-                                        <span class="fa fa-heart" id="add_start_${data.id}"></span>
-                                        <div class="ring"></div>
-                                        <div class="ring2"></div>
-                                    </div>
-                                </div>
-                                <div class="card-content">
-                                    <span class="card-title" style="color: black;"><strong>${data.name}</strong></span>
-                                    <p>
-                                        Address: ${data.address}
-                                    </p>
-                                </div>
-                                <div class="card-action">
-                                    <a href="${data.website}" target="__blank">Website</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                this.fav.favTeam(data.id, data);
-            });
-        } else {
-            teamsHtml.innerHTML = `
-                <h4>The favorite team is empty</h4>
-            `;
-        }
-    }
+    
 }
 
 
