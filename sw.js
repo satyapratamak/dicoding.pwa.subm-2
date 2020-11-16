@@ -8,6 +8,7 @@ const urlsToCache = [
     "/index.html",
     "/index.js",
     "/manifest.json",
+    "/push.js",
     //assets/img/
     "/assets/img/logo.jpg",
     "/assets/img/logo.png",
@@ -15,6 +16,7 @@ const urlsToCache = [
     "/assets/img/user.png",
     "/assets/img/LaLiga.png",
     "/assets/img/EPL.png",
+    "/assets/img/bell.png",
     // /css
     "/css/custom.css",
     // /js
@@ -72,3 +74,39 @@ self.addEventListener("fetch", (event) => {
       )
     }
 });
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then( (cacheNames) => {
+      return Promise.all(
+        cacheNames.map( (cacheName) => {
+          if (cacheName != CACHE_NAME) {
+            console.log("ServiceWorker: cache " + cacheName + " dihapus");
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+
+self.addEventListener('push', (event) => {
+  let body;
+  if (event.data) {
+    body = event.data.text();
+  } else {
+    body = 'Push message no payload';
+  }
+  const options = {
+    body: body,
+    icon: '/assets/img/logo.png',
+    vibrate: [100, 50, 100],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: 1
+    }
+  };
+  event.waitUntil(
+    self.registration.showNotification('Push Notification', options)
+  );
+}); 

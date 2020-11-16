@@ -1,5 +1,3 @@
-
-
 class RegisterSW {
 
     constructor (){
@@ -9,8 +7,6 @@ class RegisterSW {
             this.registerServiceWorker();
             this.reqPermission();
         }
-        
-
     }
 
     // Register service worker
@@ -42,7 +38,7 @@ class RegisterSW {
                         navigator.serviceWorker.getRegistration().then( (registration) => {
                             registration.pushManager.subscribe({
                                 userVisibleOnly: true,
-                                applicationServerKey: this.urlBase64ToUint8Array("BMGPi-ujXHdQf-TeHcXf0E4dIxtxlV9rdZ9GriULzx5HmgLkbMEVtYGoHD0h7JyhlN8HoPLALP8J_sJw13CQLd0")
+                                applicationServerKey: this.urlBase64ToUint8Array("BLtxAe-dWIkt--DUxM9LsgU23e0C-PKr_mYnqvOrd4JuzyTxJLbP2n8q36VIogupGmMkQa3hCgsU_q4glpGiIQE")
                             }).then( (subscribe) => {
                                 console.log('Berhasil melakukan subscribe dengan endpoint: ', subscribe.endpoint);
                                 console.log('Berhasil melakukan subscribe dengan p256dh key: ', btoa(String.fromCharCode.apply(
